@@ -50,6 +50,12 @@
   --radius-full: 62.4375rem;
 }
 
+@layer base {
+  body {
+    @apply bg-neutral-900
+  }
+}
+
 @layer components {
   /* Text presets */
   :is(
@@ -136,4 +142,17 @@
     font-size: 0.875rem;
     line-height: 1.2;
   }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
 }

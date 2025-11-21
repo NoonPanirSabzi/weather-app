@@ -1,32 +1,50 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import searchIcon from "../images/icon-search.svg";
+import type { LocationResult } from "../../types";
+import { SearchDropDown } from "./SearchDropdown";
+
+interface SearchData {
+  results?: LocationResult[];
+}
 
 export function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<null | LocationResult[]>(
+    null,
+  );
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  const serachCity = async (name: string, signal: AbortSignal) => {
-    const APIurl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=4&language=en&format=json`;
+  const searchCity = async (name: string, signal: AbortSignal) => {
+    const GEOCODING_BASE_URL = "https://geocoding-api.open-meteo.com/v1/search";
+    const RESULTS_COUNT = 4;
+    const API_URL = `${GEOCODING_BASE_URL}?name=${name}&count=${RESULTS_COUNT}&language=en&format=json`;
 
     try {
-      const response = await fetch(APIurl, { signal });
+      const response = await fetch(API_URL, { signal });
 
       if (!response.ok) {
-        // TODO: show error in the UI
+        setShowDropdown(false);
+        setIsSearchLoading(false);
+        // TODO: show error in the UI and remove next line
+        // and remove logs and unnecassary codes in catch block
         throw new Error("something went wrong");
       }
 
-      const data: { results?: [] } = await response.json();
+      const data: SearchData = await response.json();
 
       if (!data.results) {
-        // TODO: show nothing found in the UI
-        console.log("nothing found");
+        // SearchDropdown will show <nothing found>
+        // because we set results to null here
+        setSearchResults(null);
+        setIsSearchLoading(false);
         return;
       }
 
-      // TODO: pass serach resulst to Search dropdown component to show
-      // them to the user
-      console.log(data.results);
+      setSearchResults(data.results);
+      setIsSearchLoading(false);
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") return;
 
@@ -37,13 +55,21 @@ export function Search() {
   };
 
   /**
-   * user inputs less than 2 charachters will be ignored and won't trigger
-   * a re-render becausee search API doesn't return a result for queries
+   * search API doesn't return a result for queries
    * less than 2 charachters so we don't check them
    */
   const handlInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
-    if (userInput.length < 2) return;
+    if (userInput.length < 2) {
+      setShowDropdown(false);
+      // HACK: if a user types more than 2 charachters, then remove each
+      // charachter with backspace, debouncedQuery should reset so dropdownmenu
+      // doesn't show up with click on search input container
+      setDebouncedQuery("");
+      return;
+    }
+    setShowDropdown(true);
+    setIsSearchLoading(true);
     setSearchQuery(userInput);
   };
 
@@ -65,7 +91,7 @@ export function Search() {
     if (debouncedQuery.length < 2) return;
 
     const controller = new AbortController();
-    serachCity(debouncedQuery, controller.signal);
+    searchCity(debouncedQuery, controller.signal);
 
     return () => {
       // if previous pending fetch request exists, abort it before re-render
@@ -73,9 +99,30 @@ export function Search() {
     };
   }, [debouncedQuery]);
 
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col gap-y-150">
-      <div className="flex gap-x-200 rounded-12 bg-neutral-800 px-300 py-200">
+    <div className="relative flex flex-col gap-y-150" ref={searchContainerRef}>
+      <div
+        className="flex gap-x-200 rounded-12 bg-neutral-800 px-300 py-200"
+        onClick={() => {
+          if (debouncedQuery.length > 1) setShowDropdown(true);
+        }}
+      >
         <img src={searchIcon} alt="search icon" className="w-250" />
         <input
           type="text"
@@ -84,12 +131,14 @@ export function Search() {
           onInput={handlInput}
         />
       </div>
-      <button
-        type="button"
-        className="text-preset-5-medium rounded-12 bg-blue-500 px-300 py-200 text-neutral-0"
-      >
-        Search
-      </button>
+      {showDropdown && (
+        <div className="absolute -bottom-125 z-10 w-full translate-y-full">
+          <SearchDropDown
+            isSearchLoading={isSearchLoading}
+            items={searchResults}
+          />
+        </div>
+      )}
     </div>
   );
 }
