@@ -7,7 +7,11 @@ interface SearchData {
   results?: LocationResult[];
 }
 
-export function Search() {
+interface SearchProps {
+  setCity: (city: LocationResult) => void;
+}
+
+export function Search({ setCity }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [searchResults, setSearchResults] = useState<null | LocationResult[]>(
@@ -16,6 +20,14 @@ export function Search() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const resetSearch = () => {
+    setSearchQuery("");
+    setDebouncedQuery("");
+    setSearchResults(null);
+    setShowDropdown(false);
+    setIsSearchLoading(false);
+  };
 
   const searchCity = async (name: string, signal: AbortSignal) => {
     const GEOCODING_BASE_URL = "https://geocoding-api.open-meteo.com/v1/search";
@@ -60,6 +72,7 @@ export function Search() {
    */
   const handlInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
+    setSearchQuery(userInput);
     if (userInput.length < 2) {
       setShowDropdown(false);
       // HACK: if a user types more than 2 charachters, then remove each
@@ -70,7 +83,6 @@ export function Search() {
     }
     setShowDropdown(true);
     setIsSearchLoading(true);
-    setSearchQuery(userInput);
   };
 
   useEffect(() => {
@@ -129,6 +141,7 @@ export function Search() {
           placeholder="Search for a place..."
           className="text-preset-5-medium text-neutral-200"
           onInput={handlInput}
+          value={searchQuery}
         />
       </div>
       {showDropdown && (
@@ -136,6 +149,8 @@ export function Search() {
           <SearchDropDown
             isSearchLoading={isSearchLoading}
             items={searchResults}
+            setCity={setCity}
+            resetSearch={resetSearch}
           />
         </div>
       )}

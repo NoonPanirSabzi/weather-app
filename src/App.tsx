@@ -1,9 +1,13 @@
+import { useState } from "react";
 import "./App.css";
 import { Header } from "./assets/components/Header";
 import { Search } from "./assets/components/Search";
 import { WeatherInfo } from "./assets/components/WeatherInfo";
+import type { LocationResult } from "./types";
 
 function App() {
+  const [city, setCity] = useState<LocationResult>();
+
   return (
     <div className="flex flex-col gap-600 p-200">
       <Header />
@@ -11,7 +15,7 @@ function App() {
         How’s the sky looking today?
       </h1>
       <div className="flex flex-col gap-y-400">
-        <Search />
+        <Search setCity={setCity} />
         <WeatherInfo
           location="Berlin, Germany"
           date="Tuesday, Aug 5, 2025"

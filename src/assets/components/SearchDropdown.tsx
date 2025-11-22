@@ -5,11 +5,15 @@ import type { ReactNode } from "react";
 interface SearchDropDownProps {
   items: LocationResult[] | null;
   isSearchLoading: boolean;
+  setCity: (city: LocationResult) => void;
+  resetSearch: () => void;
 }
 
 export function SearchDropDown({
   items,
   isSearchLoading,
+  setCity,
+  resetSearch,
 }: SearchDropDownProps) {
   // decide on what to show
   let content: ReactNode;
@@ -41,9 +45,17 @@ export function SearchDropDown({
       ].filter(Boolean);
       const name = parts.join(", ");
       return (
-        <div className="rounded-8 px-100 py-125" key={location.id}>
+        <button
+          type="button"
+          className="cursor-pointer rounded-8 border border-transparent px-100 py-125 text-start hover:border-neutral-600 hover:bg-neutral-700"
+          key={location.id}
+          onClick={() => {
+            setCity(location);
+            resetSearch();
+          }}
+        >
           {name}
-        </div>
+        </button>
       );
     });
   }
