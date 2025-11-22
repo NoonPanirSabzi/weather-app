@@ -10,3 +10,14 @@ export interface LocationResult {
   admin3?: string;
   admin4?: string;
 }
+
+export interface weatherInfoData {
+  location: string;
+  date: string;
+  temperature: number;
+  weatherCode: number;
+  feelsLike: number;
+  humidity: number;
+  windSpeed: number;
+  precipitation: number;
+}
