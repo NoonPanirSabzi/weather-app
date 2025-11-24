@@ -1,10 +1,10 @@
 import bgTodaySmall from "../images/bg-today-small.svg";
 import bgTodayLarge from "../images/bg-today-large.svg";
-import type { weatherInfoData } from "../../types";
-import { weatherIconSrc } from "../../lib/utils";
+import type { WeatherInfoData } from "../../types";
+import { getWeatherIcon } from "../../lib/utils";
 
 interface WeatherInfoProps {
-  weatherInfo: weatherInfoData | null;
+  weatherInfo: WeatherInfoData | null;
 }
 
 export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
@@ -26,7 +26,7 @@ export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
         </div>
         <div className="absolute bottom-200 left-1/2 flex w-max -translate-x-1/2 items-center gap-x-250">
           <img
-            src={weatherIconSrc(weatherInfo.weatherCode)}
+            src={getWeatherIcon(weatherInfo.weatherCode)}
             alt="today weather icon"
             className="w-[7.5rem]"
           />

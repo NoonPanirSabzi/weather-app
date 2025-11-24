@@ -11,7 +11,7 @@ export interface LocationResult {
   admin4?: string;
 }
 
-export interface weatherInfoData {
+export interface WeatherInfoData {
   location: string;
   date: string;
   temperature: number;
@@ -21,3 +21,10 @@ export interface weatherInfoData {
   windSpeed: number;
   precipitation: number;
 }
+
+export type DailyForecastData = {
+  dayName: string;
+  iconSrc: string;
+  minTemp: number;
+  maxTemp: number;
+}[];

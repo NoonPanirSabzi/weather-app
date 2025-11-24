@@ -3,14 +3,22 @@ import "./App.css";
 import { Header } from "./assets/components/Header";
 import { Search } from "./assets/components/Search";
 import { WeatherInfo } from "./assets/components/WeatherInfo";
-import type { LocationResult, weatherInfoData } from "./types";
+import type {
+  LocationResult,
+  WeatherInfoData,
+  DailyForecastData,
+} from "./types";
 import { fetchWeatherApi } from "openmeteo";
-import { formatDate } from "./lib/utils";
+import { formatDate, getWeatherIcon } from "./lib/utils";
+import { DailyForecast } from "./assets/components/DailyForecast";
 
 function App() {
   // App data
   const [city, setCity] = useState<LocationResult | null>(null);
-  const [weatherInfo, setWeatherInfo] = useState<weatherInfoData | null>(null);
+  const [weatherInfo, setWeatherInfo] = useState<WeatherInfoData | null>(null);
+  const [dailyForecast, setDailyForecast] = useState<DailyForecastData | null>(
+    null,
+  );
 
   useEffect(() => {
     // don't run effect on inital mount or when city is not specified
@@ -20,6 +28,8 @@ function App() {
       const params = {
         latitude: city.latitude,
         longitude: city.longitude,
+        daily: ["weather_code", "temperature_2m_max", "temperature_2m_min"],
+        hourly: ["weather_code", "temperature_2m"],
         current: [
           "temperature_2m",
           "precipitation",
@@ -41,6 +51,8 @@ function App() {
         // Attributes for timezone and location
         const utcOffsetSeconds = response.utcOffsetSeconds();
         const current = response.current()!;
+        const hourly = response.hourly()!;
+        const daily = response.daily()!;
 
         // Note: The order of weather variables in the URL query and the indices below need to match!
         const weatherData = {
@@ -52,6 +64,43 @@ function App() {
             wind_speed_10m: current.variables(3)!.value(),
             apparent_temperature: current.variables(4)!.value(),
             relative_humidity_2m: current.variables(5)!.value(),
+          },
+          hourly: {
+            time: Array.from(
+              {
+                length:
+                  (Number(hourly.timeEnd()) - Number(hourly.time())) /
+                  hourly.interval(),
+              },
+              (_, i) =>
+                new Date(
+                  (Number(hourly.time()) +
+                    i * hourly.interval() +
+                    utcOffsetSeconds) *
+                    1000,
+                ),
+            ),
+            weather_code: hourly.variables(1)!.valuesArray(),
+            temperature_2m: hourly.variables(2)!.valuesArray(),
+          },
+          daily: {
+            time: Array.from(
+              {
+                length:
+                  (Number(daily.timeEnd()) - Number(daily.time())) /
+                  daily.interval(),
+              },
+              (_, i) =>
+                new Date(
+                  (Number(daily.time()) +
+                    i * daily.interval() +
+                    utcOffsetSeconds) *
+                    1000,
+                ),
+            ),
+            weather_code: daily.variables(0)!.valuesArray(),
+            temperature_2m_max: daily.variables(1)!.valuesArray(),
+            temperature_2m_min: daily.variables(2)!.valuesArray(),
           },
         };
         // The 'weatherData' object now contains a simple structure, with arrays of datetimes and weather information
@@ -67,11 +116,36 @@ function App() {
           windSpeed: Math.round(weatherData.current.wind_speed_10m),
           precipitation: weatherData.current.precipitation,
         });
+
+        // calculate forecast data:
+        const fcDays = weatherData.daily.time.map((t) =>
+          t.toString().slice(0, 3),
+        );
+        const fcMinTemps = Array.from(
+          weatherData.daily.temperature_2m_min!,
+        ).map((t) => Math.round(t));
+        const fcIconsSrc = Array.from(weatherData.daily.weather_code!).map(
+          (c) => getWeatherIcon(c),
+        );
+        const fcMaxTemps = Array.from(
+          weatherData.daily.temperature_2m_max!,
+        ).map((t) => Math.round(t));
+
+        // set forecast data:
+        setDailyForecast(
+          fcDays.map((day, index) => {
+            return {
+              dayName: day,
+              iconSrc: fcIconsSrc[index],
+              minTemp: fcMinTemps[index],
+              maxTemp: fcMaxTemps[index],
+            };
+          }),
+        );
       } catch (err) {
         // TODO: show Visual Error with retry button to the user
         console.log(err);
       }
-
     };
 
     getWeatherData();
@@ -92,6 +166,7 @@ function App() {
       <div className="flex flex-col gap-y-400">
         <Search setCity={setCity} />
         <WeatherInfo weatherInfo={weatherInfo} />
+        <DailyForecast data={dailyForecast} />
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const ICON_MAP = [
   { icon: iconDrizzle, codes: [51, 52, 53, 54, 55, 56, 57] },
   { icon: iconRain, codes: [61, 62, 63, 64, 65, 66, 67, 80, 81, 82] },
   { icon: iconSnow, codes: [71, 72, 73, 74, 75, 76, 77, 85, 86] },
-  { icon: iconStorm, codes: [95, 96, 97, 98, 99] }
+  { icon: iconStorm, codes: [95, 96, 97, 98, 99] },
 ];
 
 /**
@@ -50,8 +50,7 @@ const ICON_MAP = [
  * @param weatherCode The WMO weather code.
  * @returns The source path for the corresponding weather icon.
  */
-export function weatherIconSrc(weatherCode: number): string {
-  const condition = ICON_MAP.find(map => map.codes.includes(weatherCode));
+export function getWeatherIcon(weatherCode: number): string {
+  const condition = ICON_MAP.find((map) => map.codes.includes(weatherCode));
   return condition ? condition.icon : iconSunny;
 }
-
