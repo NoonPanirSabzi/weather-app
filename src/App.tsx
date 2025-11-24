@@ -114,7 +114,7 @@ function App() {
           feelsLike: Math.round(weatherData.current.apparent_temperature),
           humidity: weatherData.current.relative_humidity_2m,
           windSpeed: Math.round(weatherData.current.wind_speed_10m),
-          precipitation: weatherData.current.precipitation,
+          precipitation: Math.round(weatherData.current.precipitation),
         });
 
         // calculate forecast data:
@@ -131,7 +131,7 @@ function App() {
           weatherData.daily.temperature_2m_max!,
         ).map((t) => Math.round(t));
 
-        // set forecast data:
+        // set daily forecast data:
         setDailyForecast(
           fcDays.map((day, index) => {
             return {
