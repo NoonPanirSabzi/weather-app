@@ -128,7 +128,10 @@ export function Search({ setCity }: SearchProps) {
   }, []);
 
   return (
-    <div className="relative flex flex-col gap-y-150" ref={searchContainerRef}>
+    <div
+      className="relative mx-auto flex w-full max-w-[45rem] flex-col gap-y-150"
+      ref={searchContainerRef}
+    >
       <div
         className="flex gap-x-200 rounded-12 bg-neutral-800 px-300 py-200"
         onClick={() => {

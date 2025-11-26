@@ -48,11 +48,15 @@
   --radius-20: 1.25rem;
   --radius-24: 1.5rem;
   --radius-full: 62.4375rem;
+
+  /* breakpoints */
+  --breakpoint-tablet: 48em;
+  --breakpoint-desktop: 80em;
 }
 
 @layer base {
   body {
-    @apply bg-neutral-900
+    @apply bg-neutral-900;
   }
 }
 

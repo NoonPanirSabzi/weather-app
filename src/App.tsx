@@ -165,17 +165,21 @@ function App() {
   // for presentation yourself
 
   return (
-    <div className="flex flex-col gap-600 p-200">
+    <div className="mx-auto flex max-w-[76rem] flex-col gap-600 p-200 tablet:p-300 desktop:gap-y-800 desktop:px-0 desktop:pt-600 desktop:pb-1000">
       <Header />
-      <h1 className="text-preset-2 mx-auto max-w-[20.625rem] text-center text-neutral-0">
+      <h1 className="text-preset-2 mx-auto max-w-[20.625rem] text-center text-neutral-0 tablet:max-w-[30rem] desktop:max-w-full">
         How’s the sky looking today?
       </h1>
-      <div className="flex flex-col gap-y-400">
-        <Search setCity={setCity} />
+      <div className="flex flex-col gap-y-400 desktop:grid desktop:grid-cols-3 desktop:gap-x-400 desktop:gap-y-600">
+        <div className="desktop:col-span-3">
+          <Search setCity={setCity} />
+        </div>
         {city && (
           <>
-            <WeatherInfo weatherInfo={weatherInfo} />
-            <DailyForecast data={dailyForecast} />
+            <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
+              <WeatherInfo weatherInfo={weatherInfo} />
+              <DailyForecast data={dailyForecast} />
+            </div>
             <HourlyForecast data={hourlyForecast} key={city.id} />
           </>
         )}

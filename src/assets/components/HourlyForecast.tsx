@@ -37,7 +37,7 @@ export function HourlyForecast({ data }: hourlyForecastProps) {
   );
 
   return (
-    <div className="flex flex-col gap-200 rounded-20 bg-neutral-800 px-200 py-250 text-neutral-0">
+    <div className="flex h-[700px] flex-col gap-200 overflow-auto rounded-20 bg-neutral-800 px-200 py-250 text-neutral-0 tablet:p-300">
       <div className="flex items-center justify-between">
         <p className="text-preset-5">Hourly forecast</p>
         <DaysDropdown
