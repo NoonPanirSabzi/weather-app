@@ -35,6 +35,12 @@ export interface HourlyForecastData {
   weather_code: Float32Array<ArrayBufferLike> | null;
 }
 
+export interface HourlyData {
+  hours: number[];
+  weatherCodes: number[];
+  temperatures: number[];
+}
+
 export type weekDay =
   | "Monday"
   | "Tuesday"
