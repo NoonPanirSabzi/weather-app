@@ -28,3 +28,18 @@ export type DailyForecastData = {
   minTemp: number;
   maxTemp: number;
 }[];
+
+export interface HourlyForecastData {
+  time: Date[];
+  temperature_2m: Float32Array<ArrayBufferLike> | null;
+  weather_code: Float32Array<ArrayBufferLike> | null;
+}
+
+export type weekDay =
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday";

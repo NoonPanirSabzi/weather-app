@@ -1,3 +1,4 @@
+import type { weekDay } from "../types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import iconSunny from "../assets/images/icon-sunny.webp";
@@ -53,4 +54,27 @@ const ICON_MAP = [
 export function getWeatherIcon(weatherCode: number): string {
   const condition = ICON_MAP.find((map) => map.codes.includes(weatherCode));
   return condition ? condition.icon : iconSunny;
+}
+
+export const WEEKDAYS: weekDay[] = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
+/**
+ * Returns name of the weekday based on it's number. This helper function is
+ * supposed to be used to convert the number returnd by getDay() and getUTCDay() methods on Date objects to weekday name.
+ * @param weekDayNum A number between 0 and 6 (both inclusive) representing the day of week. assuming first day of the week(number 0) is Sunday
+ * @returns Name of the weekday
+ */
+export function getWeekdayName(weekDayNum: number): weekDay {
+  // HACK: input assumes a week starts from Sunday
+  // but we don't want to change order of days in WEEKDAYS array
+  // so this formula solves the problem
+  return WEEKDAYS[(weekDayNum + 6) % 7];
 }

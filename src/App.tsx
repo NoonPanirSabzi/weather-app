@@ -7,10 +7,12 @@ import type {
   LocationResult,
   WeatherInfoData,
   DailyForecastData,
+  HourlyForecastData,
 } from "./types";
 import { fetchWeatherApi } from "openmeteo";
 import { formatDate, getWeatherIcon } from "./lib/utils";
 import { DailyForecast } from "./assets/components/DailyForecast";
+import { HourlyForecast } from "./assets/components/HourlyForecast";
 
 function App() {
   // App data
@@ -19,6 +21,8 @@ function App() {
   const [dailyForecast, setDailyForecast] = useState<DailyForecastData | null>(
     null,
   );
+  const [hourlyForecast, setHourlyForecast] =
+    useState<HourlyForecastData | null>(null);
 
   useEffect(() => {
     // don't run effect on inital mount or when city is not specified
@@ -80,8 +84,8 @@ function App() {
                     1000,
                 ),
             ),
-            weather_code: hourly.variables(1)!.valuesArray(),
-            temperature_2m: hourly.variables(2)!.valuesArray(),
+            weather_code: hourly.variables(0)!.valuesArray(),
+            temperature_2m: hourly.variables(1)!.valuesArray(),
           },
           daily: {
             time: Array.from(
@@ -142,6 +146,9 @@ function App() {
             };
           }),
         );
+
+        // set hourly forecast data:
+        setHourlyForecast(weatherData.hourly);
       } catch (err) {
         // TODO: show Visual Error with retry button to the user
         console.log(err);
@@ -165,8 +172,13 @@ function App() {
       </h1>
       <div className="flex flex-col gap-y-400">
         <Search setCity={setCity} />
-        <WeatherInfo weatherInfo={weatherInfo} />
-        <DailyForecast data={dailyForecast} />
+        {city && (
+          <>
+            <WeatherInfo weatherInfo={weatherInfo} />
+            <DailyForecast data={dailyForecast} />
+            <HourlyForecast data={hourlyForecast} key={city.id} />
+          </>
+        )}
       </div>
     </div>
   );
