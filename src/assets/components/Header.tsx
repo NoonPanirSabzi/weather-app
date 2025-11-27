@@ -1,7 +1,13 @@
 import logo from "../images/logo.svg";
 import { Units } from "./Units";
+import type { UnitsData } from "../../lib/types";
 
-export function Header() {
+interface HeaderProps {
+  unitsOptions: UnitsData;
+  setUnitsOptions: (options: UnitsData) => void;
+}
+
+export function Header({ unitsOptions, setUnitsOptions }: HeaderProps) {
   return (
     <div className="flex items-center justify-between">
       <img
@@ -9,7 +15,7 @@ export function Header() {
         className="w-[8.625rem] tablet:w-auto"
         alt="Weather Now logo"
       />
-      <Units />
+      <Units unitsOptions={unitsOptions} setUnitsOptions={setUnitsOptions} />
     </div>
   );
 }

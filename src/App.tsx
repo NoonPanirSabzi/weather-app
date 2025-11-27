@@ -24,6 +24,11 @@ function App() {
   );
   const [hourlyForecast, setHourlyForecast] =
     useState<HourlyForecastData | null>(null);
+  const [unitsOptions, setUnitsOptions] = useState<UnitsData>({
+    temperature: "C",
+    windSpeed: "kmh",
+    precipitation: "mm",
+  });
 
   useEffect(() => {
     // don't run effect on inital mount or when city is not specified
@@ -167,7 +172,7 @@ function App() {
 
   return (
     <div className="mx-auto flex max-w-[76rem] flex-col gap-600 p-200 tablet:p-300 desktop:gap-y-800 desktop:px-0 desktop:pt-600 desktop:pb-1000">
-      <Header />
+      <Header unitsOptions={unitsOptions} setUnitsOptions={setUnitsOptions} />
       <h1 className="text-preset-2 mx-auto max-w-[20.625rem] text-center text-neutral-0 tablet:max-w-[30rem] desktop:max-w-full">
         How’s the sky looking today?
       </h1>
