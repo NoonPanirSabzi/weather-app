@@ -3,7 +3,8 @@ import iconDropup from "../images/icon-dropup.svg";
 import type { weekDay } from "../../types";
 import { WEEKDAYS } from "../../lib/utils";
 import { DaysDropdownItem } from "./DaysDropdownItem";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useOnClickOutside } from "../../lib/hooks/useOnClickOutside";
 
 interface DaysDropdownProps {
   activeDay: weekDay;
@@ -19,6 +20,8 @@ export function DaysDropdown({
 }: DaysDropdownProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(menuRef, () => setShowDropdown(false));
 
   // calculate array of next 7 days, based on today
   const todayIndex = WEEKDAYS.indexOf(today);

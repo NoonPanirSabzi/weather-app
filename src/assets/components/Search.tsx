@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import searchIcon from "../images/icon-search.svg";
 import type { LocationResult } from "../../types";
 import { SearchDropDown } from "./SearchDropdown";
+import { useOnClickOutside } from "../../lib/hooks/useOnClickOutside";
 
 interface SearchData {
   results?: LocationResult[];
@@ -20,6 +21,8 @@ export function Search({ setCity }: SearchProps) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(searchContainerRef, () => setShowDropdown(false));
 
   const resetSearch = () => {
     setSearchQuery("");
@@ -110,22 +113,6 @@ export function Search({ setCity }: SearchProps) {
       controller.abort();
     };
   }, [debouncedQuery]);
-
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (
-        searchContainerRef.current &&
-        !searchContainerRef.current.contains(e.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
 
   return (
     <div
