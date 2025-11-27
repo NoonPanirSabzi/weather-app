@@ -22,7 +22,9 @@ export function Search({ setCity }: SearchProps) {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  useOnClickOutside(searchContainerRef, () => setShowDropdown(false));
+  useOnClickOutside(searchContainerRef, () => {
+    if (showDropdown) setShowDropdown(false);
+  });
 
   const resetSearch = () => {
     setSearchQuery("");

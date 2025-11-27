@@ -21,7 +21,9 @@ export function DaysDropdown({
   const [showDropdown, setShowDropdown] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useOnClickOutside(menuRef, () => setShowDropdown(false));
+  useOnClickOutside(menuRef, () => {
+    if (showDropdown) setShowDropdown(false);
+  });
 
   // calculate array of next 7 days, based on today
   const todayIndex = WEEKDAYS.indexOf(today);
@@ -36,7 +38,7 @@ export function DaysDropdown({
         className="flex cursor-pointer items-center gap-150 rounded-8 bg-neutral-600 px-200 py-100"
         onClick={() => setShowDropdown(!showDropdown)}
       >
-        <span className="text-preset-7 leading-[1.3125rem]">{activeDay}</span>
+        <p className="text-preset-7">{activeDay}</p>
         <img
           src={showDropdown ? iconDropup : iconDropdown}
           alt="day settings icon"
