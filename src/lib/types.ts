@@ -49,3 +49,9 @@ export type weekDay =
   | "Friday"
   | "Saturday"
   | "Sunday";
+
+export interface UnitsData {
+  temperature: "C" | "F";
+  windSpeed: "kmh" | "mph";
+  precipitation: "mm" | "in";
+}

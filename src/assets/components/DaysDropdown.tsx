@@ -1,6 +1,6 @@
 import iconDropdown from "../images/icon-dropdown.svg";
 import iconDropup from "../images/icon-dropup.svg";
-import type { weekDay } from "../../types";
+import type { weekDay } from "../../lib/types";
 import { WEEKDAYS } from "../../lib/utils";
 import { DaysDropdownItem } from "./DaysDropdownItem";
 import { useRef, useState } from "react";
@@ -28,24 +28,6 @@ export function DaysDropdown({
   const dropDownDays = WEEKDAYS.slice(todayIndex).concat(
     WEEKDAYS.slice(0, todayIndex),
   );
-
-  useEffect(() => {
-    const handleClickOutsideMenu = (e: MouseEvent) => {
-      if (
-        showDropdown &&
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutsideMenu);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutsideMenu);
-    };
-  }, [showDropdown]);
 
   return (
     <div className="relative" ref={menuRef}>

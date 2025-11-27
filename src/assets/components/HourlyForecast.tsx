@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { HourlyData, HourlyForecastData, weekDay } from "../../types";
+import type { HourlyData, HourlyForecastData, weekDay } from "../../lib/types";
 import { DaysDropdown } from "./DaysDropdown";
 import { getWeekdayName } from "../../lib/utils";
 import { HourlyForecastItem } from "./HourlyForecastItem";

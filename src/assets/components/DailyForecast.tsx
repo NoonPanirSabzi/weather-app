@@ -1,5 +1,5 @@
 import { DailyForecastItem } from "./DailyForecastItem";
-import type { DailyForecastData } from "../../types";
+import type { DailyForecastData } from "../../lib/types";
 
 interface DailyForecastProps {
   data: DailyForecastData | null;

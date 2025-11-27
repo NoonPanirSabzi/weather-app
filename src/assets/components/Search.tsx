@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import searchIcon from "../images/icon-search.svg";
-import type { LocationResult } from "../../types";
+import type { LocationResult } from "../../lib/types";
 import { SearchDropDown } from "./SearchDropdown";
 import { useOnClickOutside } from "../../lib/hooks/useOnClickOutside";
 

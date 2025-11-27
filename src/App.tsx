@@ -8,7 +8,8 @@ import type {
   WeatherInfoData,
   DailyForecastData,
   HourlyForecastData,
-} from "./types";
+  UnitsData,
+} from "./lib/types";
 import { fetchWeatherApi } from "openmeteo";
 import { formatDate, getWeatherIcon } from "./lib/utils";
 import { DailyForecast } from "./assets/components/DailyForecast";

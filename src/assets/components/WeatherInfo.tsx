@@ -1,6 +1,6 @@
 import bgTodaySmall from "../images/bg-today-small.svg";
 import bgTodayLarge from "../images/bg-today-large.svg";
-import type { WeatherInfoData } from "../../types";
+import type { WeatherInfoData } from "../../lib/types";
 import { getWeatherIcon } from "../../lib/utils";
 
 interface WeatherInfoProps {

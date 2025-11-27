@@ -1,4 +1,4 @@
-import type { weekDay } from "../types";
+import type { weekDay } from "./types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import iconSunny from "../assets/images/icon-sunny.webp";

@@ -1,4 +1,4 @@
-import type { LocationResult } from "../../types";
+import type { LocationResult } from "../../lib/types";
 import loadingIcon from "../images/icon-loading.svg";
 import type { ReactNode } from "react";
 

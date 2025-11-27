@@ -1,4 +1,4 @@
-import type { weekDay } from "../../types";
+import type { weekDay } from "../../lib/types";
 import { cn } from "../../lib/utils";
 
 interface DaysDropdownItemProps {
