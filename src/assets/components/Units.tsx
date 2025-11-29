@@ -12,7 +12,7 @@ interface UntisProps {
 }
 
 export function Units({ unitsOptions, setUnitsOptions }: UntisProps) {
-  const [showDropdown, setShowDropdown] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
   const unitsRef = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(unitsRef, () => {

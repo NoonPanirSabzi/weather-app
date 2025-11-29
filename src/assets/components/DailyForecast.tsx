@@ -1,11 +1,13 @@
 import { DailyForecastItem } from "./DailyForecastItem";
-import type { DailyForecastData } from "../../lib/types";
+import type { DailyForecastData, UnitsData } from "../../lib/types";
+import { celsiusToFahrenheit } from "../../lib/utils";
 
 interface DailyForecastProps {
   data: DailyForecastData | null;
+  units: UnitsData;
 }
 
-export function DailyForecast({ data }: DailyForecastProps) {
+export function DailyForecast({ data, units }: DailyForecastProps) {
   // TODO return skeleton loading if data is not present or loading
   if (!data) return;
 
@@ -18,8 +20,16 @@ export function DailyForecast({ data }: DailyForecastProps) {
             key={i}
             name={d.dayName}
             imgSrc={d.iconSrc}
-            minTemp={d.minTemp}
-            maxTemp={d.maxTemp}
+            minTemp={Math.round(
+              units.temperature === "F"
+                ? celsiusToFahrenheit(d.minTemp)
+                : d.minTemp,
+            )}
+            maxTemp={Math.round(
+              units.temperature === "F"
+                ? celsiusToFahrenheit(d.maxTemp)
+                : d.maxTemp,
+            )}
           />
         ))}
       </div>

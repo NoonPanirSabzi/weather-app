@@ -183,10 +183,10 @@ function App() {
         {city && (
           <>
             <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
-              <WeatherInfo weatherInfo={weatherInfo} />
-              <DailyForecast data={dailyForecast} />
+              <WeatherInfo weatherInfo={weatherInfo} units={unitsOptions} />
+              <DailyForecast data={dailyForecast} units={unitsOptions} />
             </div>
-            <HourlyForecast data={hourlyForecast} key={city.id} />
+            <HourlyForecast data={hourlyForecast} key={city.id} units={unitsOptions} />
           </>
         )}
       </div>

@@ -1,14 +1,21 @@
 import { useState } from "react";
-import type { HourlyData, HourlyForecastData, weekDay } from "../../lib/types";
+import type {
+  HourlyData,
+  HourlyForecastData,
+  weekDay,
+  UnitsData,
+} from "../../lib/types";
 import { DaysDropdown } from "./DaysDropdown";
 import { getWeekdayName } from "../../lib/utils";
 import { HourlyForecastItem } from "./HourlyForecastItem";
+import { celsiusToFahrenheit } from "../../lib/utils";
 
 interface hourlyForecastProps {
   data: HourlyForecastData | null;
+  units: UnitsData;
 }
 
-export function HourlyForecast({ data }: hourlyForecastProps) {
+export function HourlyForecast({ data, units }: hourlyForecastProps) {
   const [activeDay, setActiveDay] = useState<weekDay>(() => {
     const currentDate = data?.time[0] ?? new Date(Date.now());
     return getWeekdayName(currentDate.getUTCDay());
@@ -51,7 +58,11 @@ export function HourlyForecast({ data }: hourlyForecastProps) {
           <HourlyForecastItem
             hour={hour}
             key={i}
-            temperature={HourlyData[activeDay]!.temperatures[i]}
+            temperature={Math.round(
+              units.temperature === "F"
+                ? celsiusToFahrenheit(HourlyData[activeDay]!.temperatures[i])
+                : HourlyData[activeDay]!.temperatures[i],
+            )}
             weatherCode={HourlyData[activeDay]!.weatherCodes[i]}
           />
         );

@@ -78,3 +78,34 @@ export function getWeekdayName(weekDayNum: number): weekDay {
   // so this formula solves the problem
   return WEEKDAYS[(weekDayNum + 6) % 7];
 }
+
+/**
+ * Converts a temperature from Celsius to Fahrenheit.
+ * Formula: F = C * 9/5 + 32
+ * @param celsius The temperature in Celsius.
+ * @returns The temperature in Fahrenheit.
+ */
+export function celsiusToFahrenheit(celsius: number): number {
+  return (celsius * 9) / 5 + 32;
+}
+
+/**
+ * Converts a speed from kilometers per hour (km/h) to miles per hour (mph).
+ * Formula: mph = km/h / 1.60934
+ * @param kmh The speed in kilometers per hour.
+ * @returns The speed in miles per hour.
+ */
+export function kmhToMph(kmh: number): number {
+  return kmh / 1.60934;
+}
+
+/**
+ * Converts a length from millimeters (mm) to inches (in).
+ * Formula: inches = mm / 25.4
+ * @param mm The length in millimeters.
+ * @returns The length in inches.
+ */
+export function mmToInches(mm: number): number {
+  return mm / 25.4;
+}
+

@@ -1,13 +1,19 @@
 import bgTodaySmall from "../images/bg-today-small.svg";
 import bgTodayLarge from "../images/bg-today-large.svg";
-import type { WeatherInfoData } from "../../lib/types";
-import { getWeatherIcon } from "../../lib/utils";
+import type { WeatherInfoData, UnitsData } from "../../lib/types";
+import {
+  getWeatherIcon,
+  celsiusToFahrenheit,
+  mmToInches,
+  kmhToMph,
+} from "../../lib/utils";
 
 interface WeatherInfoProps {
   weatherInfo: WeatherInfoData | null;
+  units: UnitsData;
 }
 
-export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
+export function WeatherInfo({ weatherInfo, units }: WeatherInfoProps) {
   // TODO: return Skeleton loading if city is chosen but weatherInfo is not fetched yet
   if (!weatherInfo) return;
 
@@ -31,7 +37,12 @@ export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
             className="w-[7.5rem]"
           />
           <p className="text-preset-1 text-neutral-0">
-            {weatherInfo.temperature}°
+            {Math.round(
+              units.temperature === "F"
+                ? celsiusToFahrenheit(weatherInfo.temperature)
+                : weatherInfo.temperature,
+            )}
+            °
           </p>
         </div>
       </div>
@@ -39,7 +50,12 @@ export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
         <div className="flex flex-col gap-y-300 rounded-12 border border-neutral-600 bg-neutral-800 p-250">
           <p className="text-preset-6 text-neutral-200">Feels Like</p>
           <p className="text-preset-3 text-neutral-0">
-            {weatherInfo.feelsLike}°
+            {Math.round(
+              units.temperature === "F"
+                ? celsiusToFahrenheit(weatherInfo.feelsLike)
+                : weatherInfo.feelsLike,
+            )}
+            °
           </p>
         </div>
         <div className="flex flex-col gap-y-300 rounded-12 border border-neutral-600 bg-neutral-800 p-250">
@@ -51,13 +67,23 @@ export function WeatherInfo({ weatherInfo }: WeatherInfoProps) {
         <div className="flex flex-col gap-y-300 rounded-12 border border-neutral-600 bg-neutral-800 p-250">
           <p className="text-preset-6 text-neutral-200">Wind</p>
           <p className="text-preset-3 text-neutral-0">
-            {weatherInfo.windSpeed} km/h
+            {Math.round(
+              units.windSpeed === "mph"
+                ? kmhToMph(weatherInfo.windSpeed)
+                : weatherInfo.windSpeed,
+            )}{" "}
+            {units.windSpeed}
           </p>
         </div>
         <div className="flex flex-col gap-y-300 rounded-12 border border-neutral-600 bg-neutral-800 p-250">
           <p className="text-preset-6 text-neutral-200">Precipitation</p>
           <p className="text-preset-3 text-neutral-0">
-            {weatherInfo.precipitation} mm
+            {Math.round(
+              units.precipitation === "in"
+                ? mmToInches(weatherInfo.precipitation)
+                : weatherInfo.precipitation,
+            )}{" "}
+            {units.precipitation}
           </p>
         </div>
       </div>
