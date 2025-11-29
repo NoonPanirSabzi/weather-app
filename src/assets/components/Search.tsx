@@ -10,9 +10,10 @@ interface SearchData {
 
 interface SearchProps {
   setCity: (city: LocationResult) => void;
+  setError: (err: boolean) => void;
 }
 
-export function Search({ setCity }: SearchProps) {
+export function Search({ setCity, setError }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [searchResults, setSearchResults] = useState<null | LocationResult[]>(
@@ -43,18 +44,15 @@ export function Search({ setCity }: SearchProps) {
       const response = await fetch(API_URL, { signal });
 
       if (!response.ok) {
-        setShowDropdown(false);
-        setIsSearchLoading(false);
-        // TODO: show error in the UI and remove next line
-        // and remove logs and unnecassary codes in catch block
-        throw new Error("something went wrong");
+        throw new Error();
       }
 
       const data: SearchData = await response.json();
 
       if (!data.results) {
         // SearchDropdown will show <nothing found>
-        // because we set results to null here
+        // because we set <results> to <null> here and <searchLoading>
+        // to <false> in finally block
         setSearchResults(null);
         setIsSearchLoading(false);
         return;
@@ -63,10 +61,11 @@ export function Search({ setCity }: SearchProps) {
       setSearchResults(data.results);
       setIsSearchLoading(false);
     } catch (err) {
+      // do nothing if the error is caused by aborting previeus fetch request
       if (err instanceof Error && err.name === "AbortError") return;
-
+      // show visual error
       if (err instanceof Error) {
-        console.log("something went wrong");
+        setError(true);
       }
     }
   };

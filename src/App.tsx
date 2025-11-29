@@ -14,6 +14,8 @@ import { fetchWeatherApi } from "openmeteo";
 import { formatDate, getWeatherIcon } from "./lib/utils";
 import { DailyForecast } from "./assets/components/DailyForecast";
 import { HourlyForecast } from "./assets/components/HourlyForecast";
+import errorIcon from "./assets/images/icon-error.svg";
+import retryIcon from "./assets/images/icon-retry.svg";
 
 function App() {
   // App data
@@ -29,6 +31,14 @@ function App() {
     windSpeed: "kmh",
     precipitation: "mm",
   });
+  const [error, setError] = useState<boolean>(false);
+
+  function resetAppData() {
+    setCity(null);
+    setWeatherInfo(null);
+    setDailyForecast(null);
+    setHourlyForecast(null);
+  }
 
   useEffect(() => {
     // don't run effect on inital mount or when city is not specified
@@ -53,7 +63,7 @@ function App() {
       const url = "https://api.open-meteo.com/v1/forecast";
 
       try {
-        const responses = await fetchWeatherApi(url, params, 3, 3, 4);
+        const responses = await fetchWeatherApi(url, params);
 
         // Process first location. Add a for-loop for multiple locations or weather models
         const response = responses[0];
@@ -156,8 +166,7 @@ function App() {
         // set hourly forecast data:
         setHourlyForecast(weatherData.hourly);
       } catch (err) {
-        // TODO: show Visual Error with retry button to the user
-        console.log(err);
+        if (err instanceof Error) setError(true);
       }
     };
 
@@ -166,30 +175,55 @@ function App() {
     // TODO write the return function of this hook if needed for cleanup
   }, [city]);
 
-  // TODO: complete Units component and apply unit to other components
-  // You don't need to fetch in other units, convert units with a util function
-  // for presentation yourself
-
   return (
     <div className="mx-auto flex max-w-[76rem] flex-col gap-600 p-200 tablet:p-300 desktop:gap-y-800 desktop:px-0 desktop:pt-600 desktop:pb-1000">
       <Header unitsOptions={unitsOptions} setUnitsOptions={setUnitsOptions} />
-      <h1 className="text-preset-2 mx-auto max-w-[20.625rem] text-center text-neutral-0 tablet:max-w-[30rem] desktop:max-w-full">
-        How’s the sky looking today?
-      </h1>
-      <div className="flex flex-col gap-y-400 desktop:grid desktop:grid-cols-3 desktop:gap-x-400 desktop:gap-y-600">
-        <div className="desktop:col-span-3">
-          <Search setCity={setCity} />
-        </div>
-        {city && (
-          <>
-            <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
-              <WeatherInfo weatherInfo={weatherInfo} units={unitsOptions} />
-              <DailyForecast data={dailyForecast} units={unitsOptions} />
+      {!error && (
+        <>
+          <h1 className="text-preset-2 mx-auto max-w-[20.625rem] text-center text-neutral-0 tablet:max-w-[30rem] desktop:max-w-full">
+            How’s the sky looking today?
+          </h1>
+          <div className="flex flex-col gap-y-400 desktop:grid desktop:grid-cols-3 desktop:gap-x-400 desktop:gap-y-600">
+            <div className="desktop:col-span-3">
+              <Search setCity={setCity} setError={setError} />
             </div>
-            <HourlyForecast data={hourlyForecast} key={city.id} units={unitsOptions} />
-          </>
-        )}
-      </div>
+            {city && (
+              <>
+                <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
+                  <WeatherInfo weatherInfo={weatherInfo} units={unitsOptions} />
+                  <DailyForecast data={dailyForecast} units={unitsOptions} />
+                </div>
+                <HourlyForecast
+                  data={hourlyForecast}
+                  key={city.id}
+                  units={unitsOptions}
+                />
+              </>
+            )}
+          </div>
+        </>
+      )}
+      {error && (
+        <div className="flex flex-col items-center gap-y-300 pt-500 text-center">
+          <img src={errorIcon} alt="error Icon" className="w-[2.625rem]" />
+          <h2 className="text-preset-2 text-neutral-0">Something went wrong</h2>
+          <p className="text-preset-5-medium text-neutral-200">
+            We couldn’t connect to the server (API error). Please try again in a
+            few moments.
+          </p>
+          <button
+            onClick={() => {
+              setError(false);
+              resetAppData();
+            }}
+            type="button"
+            className="flex cursor-pointer gap-x-125 rounded-8 bg-neutral-800 px-200 py-150 hover:bg-neutral-700"
+          >
+            <img src={retryIcon} alt="retry button icon" />
+            <p className="text-preset-7 text-neutral-0">Retry</p>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
