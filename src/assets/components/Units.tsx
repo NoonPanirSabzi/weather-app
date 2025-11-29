@@ -23,7 +23,7 @@ export function Units({ unitsOptions, setUnitsOptions }: UntisProps) {
     <div className="relative" ref={unitsRef}>
       <button
         type="button"
-        className="flex w-fit cursor-pointer gap-x-075 rounded-6 bg-neutral-800 px-125 py-100 tablet:gap-x-125 tablet:px-200 tablet:py-150"
+        className="flex w-fit cursor-pointer gap-x-075 rounded-6 bg-neutral-800 px-125 py-100 outline-offset-3 outline-neutral-0 hover:bg-neutral-700 focus-visible:outline-2 tablet:gap-x-125 tablet:px-200 tablet:py-150"
         onClick={() => setShowDropdown(!showDropdown)}
       >
         <img

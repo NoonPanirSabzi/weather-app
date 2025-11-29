@@ -35,7 +35,7 @@ export function DaysDropdown({
     <div className="relative" ref={menuRef}>
       <button
         type="button"
-        className="flex cursor-pointer items-center gap-150 rounded-8 bg-neutral-600 px-200 py-100"
+        className="flex cursor-pointer items-center gap-150 rounded-8 bg-neutral-600 px-200 py-100 outline-offset-3 outline-neutral-0 hover:bg-neutral-700 focus-visible:outline-2"
         onClick={() => setShowDropdown(!showDropdown)}
       >
         <p className="text-preset-7">{activeDay}</p>

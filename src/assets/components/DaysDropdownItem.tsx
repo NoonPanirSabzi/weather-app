@@ -18,7 +18,7 @@ export function DaysDropdownItem({
     <button
       type="button"
       className={cn(
-        "w-full cursor-pointer rounded-8 px-100 py-125 text-start hover:bg-neutral-700",
+        "w-full cursor-pointer rounded-8 px-100 py-125 text-start outline-offset-1 outline-neutral-0 hover:bg-neutral-700 focus-visible:outline-1",
         showActiveStyle ? "bg-neutral-700" : undefined,
       )}
       onClick={() => {

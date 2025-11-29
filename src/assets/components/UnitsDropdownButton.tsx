@@ -25,7 +25,7 @@ export function UnitsDropdownButton({
         }}
         type="button"
         className={cn(
-          "w-full cursor-pointer rounded-8 px-100 py-125 text-start text-neutral-0 hover:bg-neutral-700",
+          "w-full cursor-pointer rounded-8 px-100 py-125 text-start text-neutral-0 outline-offset-1 outline-neutral-0 hover:bg-neutral-700 focus-visible:outline-1",
           isSelected && "bg-neutral-700",
         )}
       >
