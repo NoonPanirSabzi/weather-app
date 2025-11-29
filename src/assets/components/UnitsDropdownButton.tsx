@@ -1,18 +1,28 @@
 import { cn } from "../../lib/utils";
 import checkmark from "../images/icon-checkmark.svg";
+import type { UnitsData } from "../../lib/types";
 
 interface UnitsDropdownButtonProps {
   text: string;
   isSelected: boolean;
+  /** what values will this button update when clicked */
+  updateValues: Partial<UnitsData>;
+  updateHandler: (values: Partial<UnitsData>) => void;
 }
 
 export function UnitsDropdownButton({
   text,
   isSelected,
+  updateValues,
+  updateHandler,
 }: UnitsDropdownButtonProps) {
   return (
     <div className="relative">
       <button
+        onClick={() => {
+          if (isSelected) return;
+          updateHandler(updateValues);
+        }}
         type="button"
         className={cn(
           "w-full cursor-pointer rounded-8 px-100 py-125 text-start text-neutral-0 hover:bg-neutral-700",
