@@ -128,12 +128,16 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
           if (debouncedQuery.length > 1) setShowDropdown(true);
         }}
       >
-        <img
-          src={searchIcon}
-          alt="search icon"
-          className="absolute top-1/2 left-300 w-250 -translate-y-1/2"
-        />
+        <label htmlFor="search-input">
+          <img
+            src={searchIcon}
+            alt="search icon"
+            className="absolute top-1/2 left-300 w-250 -translate-y-1/2 cursor-pointer"
+          />
+        </label>
         <input
+          name="search city input"
+          id="search-input"
           type="text"
           placeholder="Search for a place..."
           className="text-preset-5-medium focus-visible:outline- w-full rounded-12 bg-neutral-800 py-200 ps-[3.75rem] pe-300 text-neutral-0 outline-offset-3 outline-neutral-0 placeholder:text-neutral-200 placeholder:transition placeholder:duration-300 hover:bg-neutral-700 focus:placeholder:opacity-0"
