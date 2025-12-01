@@ -3,14 +3,11 @@ import type { DailyForecastData, UnitsData } from "../../lib/types";
 import { celsiusToFahrenheit } from "../../lib/utils";
 
 interface DailyForecastProps {
-  data: DailyForecastData | null;
+  data: DailyForecastData;
   units: UnitsData;
 }
 
 export function DailyForecast({ data, units }: DailyForecastProps) {
-  // TODO return skeleton loading if data is not present or loading
-  if (!data) return;
-
   return (
     <div>
       <p className="text-preset-5 mb-250 text-neutral-0">Daily forecast</p>

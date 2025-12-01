@@ -11,18 +11,15 @@ import { HourlyForecastItem } from "./HourlyForecastItem";
 import { celsiusToFahrenheit } from "../../lib/utils";
 
 interface hourlyForecastProps {
-  data: HourlyForecastData | null;
+  data: HourlyForecastData;
   units: UnitsData;
 }
 
 export function HourlyForecast({ data, units }: hourlyForecastProps) {
   const [activeDay, setActiveDay] = useState<weekDay>(() => {
-    const currentDate = data?.time[0] ?? new Date(Date.now());
+    const currentDate = data.time[0];
     return getWeekdayName(currentDate.getUTCDay());
   });
-
-  // TODO return skeleton loading if data is not yet provided or fully loaded:
-  if (!data) return;
 
   const START_DAY = getWeekdayName(data.time[0].getUTCDay());
 

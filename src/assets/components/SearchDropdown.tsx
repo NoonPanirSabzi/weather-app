@@ -6,14 +6,14 @@ interface SearchDropDownProps {
   items: LocationResult[] | null;
   isSearchLoading: boolean;
   setCity: (city: LocationResult) => void;
-  resetSearch: () => void;
+  resetSearchAndApp: () => void;
 }
 
 export function SearchDropDown({
   items,
   isSearchLoading,
   setCity,
-  resetSearch,
+  resetSearchAndApp,
 }: SearchDropDownProps) {
   // decide on what to show
   let content: ReactNode;
@@ -50,8 +50,11 @@ export function SearchDropDown({
           className="cursor-pointer rounded-8 border border-transparent px-100 py-125 text-start hover:border-neutral-600 hover:bg-neutral-700"
           key={location.id}
           onClick={() => {
+            // Important: setCity MUST come after reset function, because reset function
+            // resets City and all other app data (we want this), and then by calling
+            // setCity here, we trigger the fetch for new city data.
+            resetSearchAndApp();
             setCity(location);
-            resetSearch();
           }}
         >
           {name}

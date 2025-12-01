@@ -160,3 +160,17 @@
 .animate-spin {
   animation: spin 1s linear infinite;
 }
+
+@keyframes pulse-skeleton {
+  0%,
+  100% {
+    background-color: var(--color-neutral-800);
+  }
+  50% {
+    background-color: var(--color-neutral-700);
+  }
+}
+
+.animate-pulse-skeleton {
+  animation: pulse-skeleton 1.5s infinite ease-in-out;
+}

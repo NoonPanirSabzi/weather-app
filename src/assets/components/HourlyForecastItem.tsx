@@ -18,6 +18,8 @@ export function HourlyForecastItem({
           src={getWeatherIcon(weatherCode)}
           alt={`Weather at ${hour}`}
           className="w-[2.5rem]"
+          width={40}
+          height={40}
         />
         <p className="text-preset-5-medium">
           {hour === 0

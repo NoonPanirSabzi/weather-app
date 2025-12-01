@@ -9,20 +9,27 @@ import {
 } from "../../lib/utils";
 
 interface WeatherInfoProps {
-  weatherInfo: WeatherInfoData | null;
+  weatherInfo: WeatherInfoData;
   units: UnitsData;
 }
 
 export function WeatherInfo({ weatherInfo, units }: WeatherInfoProps) {
-  // TODO: return Skeleton loading if city is chosen but weatherInfo is not fetched yet
-  if (!weatherInfo) return;
-
   return (
     <div className="flex flex-col gap-y-250 desktop:gap-y-400">
       <div className="relative mx-auto w-fit">
         <picture>
-          <source media="(min-width: 48rem)" srcSet={bgTodayLarge} />
-          <img src={bgTodaySmall} alt="small background" />
+          <source
+            media="(min-width: 48rem)"
+            srcSet={bgTodayLarge}
+            width={800}
+            height={286}
+          />
+          <img
+            src={bgTodaySmall}
+            alt="small background"
+            width={343}
+            height={286}
+          />
         </picture>
         <div className="absolute top-400 left-1/2 flex w-max -translate-x-1/2 flex-col items-center gap-y-150 tablet:top-1/2 tablet:left-300 tablet:translate-x-0 tablet:-translate-y-1/2">
           <p className="text-preset-4 max-w-[300px] text-center text-neutral-0">
@@ -35,6 +42,8 @@ export function WeatherInfo({ weatherInfo, units }: WeatherInfoProps) {
             src={getWeatherIcon(weatherInfo.weatherCode)}
             alt="today weather icon"
             className="w-[7.5rem]"
+            width={120}
+            height={120}
           />
           <p className="text-preset-1 text-neutral-0">
             {Math.round(

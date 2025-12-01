@@ -11,9 +11,10 @@ interface SearchData {
 interface SearchProps {
   setCity: (city: LocationResult) => void;
   setError: (err: boolean) => void;
+  resetAppData: () => void;
 }
 
-export function Search({ setCity, setError }: SearchProps) {
+export function Search({ setCity, setError, resetAppData }: SearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [searchResults, setSearchResults] = useState<null | LocationResult[]>(
@@ -27,7 +28,8 @@ export function Search({ setCity, setError }: SearchProps) {
     if (showDropdown) setShowDropdown(false);
   });
 
-  const resetSearch = () => {
+  const resetSearchAndApp = () => {
+    resetAppData();
     setSearchQuery("");
     setDebouncedQuery("");
     setSearchResults(null);
@@ -145,7 +147,7 @@ export function Search({ setCity, setError }: SearchProps) {
             isSearchLoading={isSearchLoading}
             items={searchResults}
             setCity={setCity}
-            resetSearch={resetSearch}
+            resetSearchAndApp={resetSearchAndApp}
           />
         </div>
       )}

@@ -16,6 +16,22 @@ import { DailyForecast } from "./assets/components/DailyForecast";
 import { HourlyForecast } from "./assets/components/HourlyForecast";
 import errorIcon from "./assets/images/icon-error.svg";
 import retryIcon from "./assets/images/icon-retry.svg";
+import { cn } from "./lib/utils";
+import { WeatherInfoSkeleton } from "./assets/components/WeatherInfoSkeleton";
+import { DailyForecastSkeleton } from "./assets/components/DailyForecastSkeleton";
+import { HourlyForecastSkeleton } from "./assets/components/HourlyForecastSkeleton";
+// images to preload after initial render
+import useImagePreloader from "./lib/hooks/useImagePreloader";
+import preLoadImg1 from "./assets/images/bg-today-small.svg";
+import preLoadImg2 from "./assets/images/bg-today-large.svg";
+import preLoadImg3 from "./assets/images/icon-drizzle.webp";
+import preLoadImg4 from "./assets/images/icon-fog.webp";
+import preLoadImg5 from "./assets/images/icon-overcast.webp";
+import preLoadImg6 from "./assets/images/icon-partly-cloudy.webp";
+import preLoadImg7 from "./assets/images/icon-rain.webp";
+import preLoadImg8 from "./assets/images/icon-sunny.webp";
+import preLoadImg9 from "./assets/images/icon-snow.webp";
+import preLoadImg10 from "./assets/images/icon-storm.webp";
 
 function App() {
   // App data
@@ -32,12 +48,14 @@ function App() {
     precipitation: "mm",
   });
   const [error, setError] = useState<boolean>(false);
+  const [showSkeleton, setShowSkeleton] = useState<boolean>(true);
 
   function resetAppData() {
     setCity(null);
     setWeatherInfo(null);
     setDailyForecast(null);
     setHourlyForecast(null);
+    setShowSkeleton(true);
   }
 
   useEffect(() => {
@@ -175,6 +193,36 @@ function App() {
     // TODO write the return function of this hook if needed for cleanup
   }, [city]);
 
+  // preload images on initial mount
+  const imgUrlsToPreload = [
+    preLoadImg1,
+    preLoadImg2,
+    preLoadImg3,
+    preLoadImg4,
+    preLoadImg5,
+    preLoadImg6,
+    preLoadImg7,
+    preLoadImg8,
+    preLoadImg9,
+    preLoadImg10,
+  ];
+  const allImagesAreLoaded = useImagePreloader(imgUrlsToPreload);
+  const isDataLoading = !weatherInfo;
+  const isLoading = isDataLoading || !allImagesAreLoaded;
+  const SKELETON_DELAY = 500; // ms
+
+  useEffect(() => {
+    let timer: number;
+    if (!isLoading) {
+      timer = setTimeout(() => {
+        setShowSkeleton(false);
+      }, SKELETON_DELAY);
+    }
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [isLoading]);
   return (
     <div className="mx-auto flex max-w-[76rem] flex-col gap-600 p-200 tablet:p-300 desktop:gap-y-800 desktop:px-0 desktop:pt-600 desktop:pb-1000">
       <Header unitsOptions={unitsOptions} setUnitsOptions={setUnitsOptions} />
@@ -185,19 +233,54 @@ function App() {
           </h1>
           <div className="flex flex-col gap-y-400 desktop:grid desktop:grid-cols-3 desktop:gap-x-400 desktop:gap-y-600">
             <div className="desktop:col-span-3">
-              <Search setCity={setCity} setError={setError} />
+              <Search
+                setCity={setCity}
+                setError={setError}
+                resetAppData={resetAppData}
+              />
             </div>
             {city && (
               <>
-                <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
-                  <WeatherInfo weatherInfo={weatherInfo} units={unitsOptions} />
-                  <DailyForecast data={dailyForecast} units={unitsOptions} />
+                <div
+                  className={cn(
+                    "flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between",
+                    showSkeleton &&
+                      "invisible absolute -top-[9999px] -left-[9999px]",
+                  )}
+                >
+                  {weatherInfo && (
+                    <WeatherInfo
+                      weatherInfo={weatherInfo}
+                      units={unitsOptions}
+                    />
+                  )}
+                  {dailyForecast && (
+                    <DailyForecast data={dailyForecast} units={unitsOptions} />
+                  )}
                 </div>
-                <HourlyForecast
-                  data={hourlyForecast}
-                  key={city.id}
-                  units={unitsOptions}
-                />
+                <div
+                  className={cn(
+                    showSkeleton &&
+                      "invisible absolute -top-[9999px] -left-[9999px]",
+                  )}
+                >
+                  {hourlyForecast && (
+                    <HourlyForecast
+                      data={hourlyForecast}
+                      key={city.id}
+                      units={unitsOptions}
+                    />
+                  )}
+                </div>
+                {showSkeleton && (
+                  <>
+                    <div className="flex flex-col gap-y-400 desktop:col-span-2 desktop:justify-between">
+                      <WeatherInfoSkeleton />
+                      <DailyForecastSkeleton />
+                    </div>
+                    <HourlyForecastSkeleton />
+                  </>
+                )}
               </>
             )}
           </div>
