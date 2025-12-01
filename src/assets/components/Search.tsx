@@ -140,7 +140,7 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
           id="search-input"
           type="text"
           placeholder="Search for a place..."
-          className="text-preset-5-medium focus-visible:outline- w-full rounded-12 bg-neutral-800 py-200 ps-[3.75rem] pe-300 text-neutral-0 outline-offset-3 outline-neutral-0 placeholder:text-neutral-200 placeholder:transition placeholder:duration-300 hover:bg-neutral-700 focus:placeholder:opacity-0"
+          className="text-preset-5-medium w-full rounded-12 bg-neutral-800 py-200 ps-[3.75rem] pe-300 text-neutral-0 outline-offset-3 outline-neutral-0 placeholder:text-neutral-200 placeholder:transition placeholder:duration-300 hover:bg-neutral-700 focus:placeholder:opacity-0 focus-visible:outline-3"
           onInput={handlInput}
           value={searchQuery}
         />
