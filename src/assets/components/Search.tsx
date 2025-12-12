@@ -3,6 +3,8 @@ import searchIcon from "../images/icon-search.svg";
 import type { LocationResult } from "../../lib/types";
 import { SearchDropDown } from "./SearchDropdown";
 import { useOnClickOutside } from "../../lib/hooks/useOnClickOutside";
+import { useMediaQuery } from "../../lib/hooks/useMediaQuery";
+import { cn } from "../../lib/utils";
 
 interface SearchData {
   results?: LocationResult[];
@@ -22,10 +24,13 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
   );
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+  const isMobileOrTablet = useMediaQuery("(max-width: 48em)");
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(searchContainerRef, () => {
     if (showDropdown) setShowDropdown(false);
+    if (showOverlay) setShowOverlay(false);
   });
 
   const resetSearchAndApp = () => {
@@ -35,6 +40,7 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
     setSearchResults(null);
     setShowDropdown(false);
     setIsSearchLoading(false);
+    setShowOverlay(false);
   };
 
   const searchCity = async (name: string, signal: AbortSignal) => {
@@ -117,17 +123,24 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
     };
   }, [debouncedQuery]);
 
-  return (
+  const handleInputWrapperClick = () => {
+    if (isMobileOrTablet) {
+      setShowOverlay(true);
+    }
+    if (debouncedQuery.length > 1) {
+      setShowDropdown(true);
+    }
+  };
+
+  const searchContent = (
     <div
-      className="relative mx-auto flex w-full max-w-[45rem] flex-col gap-y-150"
+      className={cn(
+        "relative mx-auto flex w-full flex-col gap-y-150",
+        showOverlay ? "max-w-[45rem]" : "max-w-full",
+      )}
       ref={searchContainerRef}
     >
-      <div
-        className="relative"
-        onClick={() => {
-          if (debouncedQuery.length > 1) setShowDropdown(true);
-        }}
-      >
+      <div className="relative" onClick={handleInputWrapperClick}>
         <label htmlFor="search-input">
           <img
             src={searchIcon}
@@ -157,4 +170,14 @@ export function Search({ setCity, setError, resetAppData }: SearchProps) {
       )}
     </div>
   );
+
+  if (showOverlay) {
+    return (
+      <div className="fixed inset-0 z-20 bg-neutral-900/75 px-200 pt-400 backdrop-blur-[4px]">
+        {searchContent}
+      </div>
+    );
+  }
+
+  return <div className="mx-auto w-full max-w-[45rem]">{searchContent}</div>;
 }
